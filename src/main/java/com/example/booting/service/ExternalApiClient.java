@@ -1,5 +1,6 @@
 package com.example.booting.service;
 
+import com.example.booting.util.Joke;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,8 +17,12 @@ public class ExternalApiClient {
 
     public String fetchJoke() {
         String url = "https://api.chucknorris.io/jokes/random";
-        Map<?, ?> json = restTemplate.getForObject(url, Map.class);
+        Joke joke = restTemplate.getForObject(url, Joke.class);
 
-        return (String) json.get("value");
+        if(joke == null || joke.getValue() == null) {
+            return "No joke available";
+        }
+
+        return joke.getValue();
     }
 }
