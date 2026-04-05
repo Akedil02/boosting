@@ -1,20 +1,24 @@
 package com.example.booting.controller;
 
-import com.example.booting.util.CreateEventRequest;
-import com.example.booting.util.EventResponse;
+import com.example.booting.DTO.CreateEventRequest;
+import com.example.booting.DTO.EventResponse;
+import com.example.booting.exception.ApiErrorResponse;
+import com.example.booting.exception.ValidationErrorResponse;
 import com.example.booting.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -33,7 +37,16 @@ public class EventController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Event created"),
-            @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content)
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+            )
     })
     @PostMapping
     public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody CreateEventRequest request) {
@@ -42,12 +55,12 @@ public class EventController {
 
     @Operation(
             summary = "List events",
-            description = "Returns all events."
+            description = "Returns events using pagination."
     )
     @ApiResponse(responseCode = "200", description = "Events returned")
     @GetMapping
-    public ResponseEntity<List<EventResponse>> getAllEvents() {
-        return ResponseEntity.ok(eventService.getAllEvents());
+    public ResponseEntity<Page<EventResponse>> getAllEvents(@ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(eventService.getAllEvents(pageable));
     }
 
     @Operation(
@@ -56,7 +69,16 @@ public class EventController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Event returned"),
-            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Event not found",
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<EventResponse> getEventById(
@@ -72,7 +94,16 @@ public class EventController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Event deleted"),
-            @ApiResponse(responseCode = "404", description = "Event not found", content = @Content)
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Event not found",
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ApiErrorResponse.class))
+            )
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(

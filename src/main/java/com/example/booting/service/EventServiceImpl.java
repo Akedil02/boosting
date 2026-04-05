@@ -1,17 +1,18 @@
 package com.example.booting.service;
 
-import com.example.booting.util.CreateEventRequest;
-import com.example.booting.util.EventResponse;
+import com.example.booting.DTO.CreateEventRequest;
+import com.example.booting.DTO.EventResponse;
 import com.example.booting.entity.Event;
 import com.example.booting.exception.ResourceNotFoundException;
 import com.example.booting.mapper.EventMapper;
 import com.example.booting.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -41,9 +42,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventResponse> getAllEvents() {
+    public Page<EventResponse> getAllEvents(Pageable pageable) {
         log.info("Fetching all events");
-        return eventMapper.toResponseList(eventRepository.findAll());
+        return eventRepository.findAll(pageable).map(eventMapper::toResponse);
     }
 
     @Override

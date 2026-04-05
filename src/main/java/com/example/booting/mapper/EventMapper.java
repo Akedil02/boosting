@@ -1,7 +1,7 @@
 package com.example.booting.mapper;
 
-import com.example.booting.util.CreateEventRequest;
-import com.example.booting.util.EventResponse;
+import com.example.booting.DTO.CreateEventRequest;
+import com.example.booting.DTO.EventResponse;
 import com.example.booting.entity.Event;
 import org.springframework.stereotype.Component;
 

@@ -1,35 +1,29 @@
-package com.example.booting.util;
+package com.example.booting.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.time.LocalDateTime;
+@Schema(name = "CreateEventRequest", description = "Payload used to create a new event")
+public class CreateEventRequest {
 
-@Schema(name = "EventResponse", description = "Event data returned by APIs")
-public class EventResponse {
-
-    @Schema(description = "Event id", example = "1")
-    private Long id;
-
+    @NotBlank(message = "Title must not be blank")
     @Schema(description = "Event title", example = "Spring Boot Workshop")
     private String title;
 
+    @Email(message = "Organizer email must be valid")
     @Schema(description = "Organizer email address", example = "organizer@example.com")
     private String organizerEmail;
 
-    @Schema(description = "Ticket price in local currency", example = "99.5")
+    @Min(value = 0, message = "Ticket price must be at least 0")
+    @Schema(description = "Ticket price in local currency", example = "99.5", minimum = "0")
     private Double ticketPrice;
 
     @Schema(description = "Long event description", example = "Hands-on workshop covering controllers and JPA.")
     private String description;
 
-    @Schema(description = "Event creation timestamp", example = "2026-04-01T10:15:30")
-    private LocalDateTime createdAt;
-
-    public EventResponse() {
-    }
-
-    public Long getId() {
-        return id;
+    public CreateEventRequest() {
     }
 
     public String getTitle() {
@@ -48,14 +42,6 @@ public class EventResponse {
         return description;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -70,9 +56,5 @@ public class EventResponse {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

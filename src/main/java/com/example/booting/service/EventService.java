@@ -1,15 +1,15 @@
 package com.example.booting.service;
 
-import com.example.booting.util.CreateEventRequest;
-import com.example.booting.util.EventResponse;
-
-import java.util.List;
+import com.example.booting.DTO.CreateEventRequest;
+import com.example.booting.DTO.EventResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface EventService {
 
     EventResponse createEvent(CreateEventRequest request);
 
-    List<EventResponse> getAllEvents();
+    Page<EventResponse> getAllEvents(Pageable pageable);
 
     EventResponse getEventById(Long id);
 
