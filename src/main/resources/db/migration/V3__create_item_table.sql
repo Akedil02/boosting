@@ -1,0 +1,5 @@
+CREATE TABLE item (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    price DOUBLE PRECISION NOT NULL
+);

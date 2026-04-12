@@ -7,6 +7,7 @@ import com.example.booting.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,7 +43,15 @@ public class ItemController {
             )
     })
     @PostMapping
-    public Item create(@RequestBody Item item){
+    public Item create(
+            @org.springframework.web.bind.annotation.RequestBody
+            @RequestBody(
+                    required = true,
+                    description = "Item creation payload",
+                    content = @Content(schema = @Schema(implementation = Item.class))
+            )
+            Item item
+    ){
         return service.saveItem(item);
     }
 

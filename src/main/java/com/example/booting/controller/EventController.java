@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,7 +50,16 @@ public class EventController {
             )
     })
     @PostMapping
-    public ResponseEntity<EventResponse> createEvent(@Valid @RequestBody CreateEventRequest request) {
+    public ResponseEntity<EventResponse> createEvent(
+            @Valid
+            @org.springframework.web.bind.annotation.RequestBody
+            @RequestBody(
+                    required = true,
+                    description = "Event creation payload",
+                    content = @Content(schema = @Schema(implementation = CreateEventRequest.class))
+            )
+            CreateEventRequest request
+    ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(request));
     }
 
@@ -59,7 +69,10 @@ public class EventController {
     )
     @ApiResponse(responseCode = "200", description = "Events returned")
     @GetMapping
-    public ResponseEntity<Page<EventResponse>> getAllEvents(@ParameterObject Pageable pageable) {
+    public ResponseEntity<Page<EventResponse>> getAllEvents(
+            @Parameter(description = "Pagination and sorting options")
+            @ParameterObject Pageable pageable
+    ) {
         return ResponseEntity.ok(eventService.getAllEvents(pageable));
     }
 

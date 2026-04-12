@@ -7,6 +7,7 @@ import com.example.booting.util.CalculateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +41,15 @@ public class CalculateController {
             )
     })
     @PostMapping("/api/calculate")
-    public CalculateResponse calculate(@RequestBody CalculateRequest request){
+    public CalculateResponse calculate(
+            @org.springframework.web.bind.annotation.RequestBody
+            @RequestBody(
+                    required = true,
+                    description = "Calculation payload",
+                    content = @Content(schema = @Schema(implementation = CalculateRequest.class))
+            )
+            CalculateRequest request
+    ){
         return calculateService.add(request);
     }
 
